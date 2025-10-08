@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kindergarten Fall Party Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Autumn Neutrals -->
+    <!-- Application Structure Plan: A single-page event hub for the Kindergarten Fall Party. The structure is designed to be task-oriented for parents, focusing on volunteering. It features a main "How to Help" interactive section with cards for different roles, a clear schedule timeline, and a final call to action. This is more engaging and clearer than a long email, making it easier for parents to see what's needed at a glance and "sign up" visually. -->
+    <!-- Visualization & Content Choices: Event details -> Inform -> Text blocks. Volunteer needs -> Organize -> Interactive cards with counters/status indicators (Vanilla JS) instead of a static list. This interaction gives parents immediate visual feedback. Schedule -> Inform -> A simple, non-interactive vertical timeline using HTML/Tailwind for clarity. This is better than a text block for showing the flow of the party. All icons are Unicode characters. No SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #fdfbf6;
+        color: #5c4033;
+      }
+      .header-title {
+        font-family: "Georgia", serif;
+        color: #d35400;
+      }
+      .btn {
+        transition: all 0.2s ease-in-out;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .card {
+        background-color: #ffffff;
+        border: 1px solid #e5e0d8;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+          0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        transition: box-shadow 0.3s ease;
+      }
+      .card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07),
+          0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #e5e0d8;
+      }
+      .timeline-item {
+        position: relative;
+      }
+      .timeline-dot {
+        position: absolute;
+        left: 50%;
+        top: 0.5rem;
+        transform: translateX(-50%);
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 9999px;
+        background-color: #fdfbf6;
+        border: 2px solid #d35400;
+        z-index: 10;
+      }
+      .timeline-content {
+        width: calc(50% - 2rem);
+      }
+      .timeline-item:nth-child(even) .timeline-content {
+        margin-left: calc(50% + 2rem);
+      }
+      .timeline-item:nth-child(odd) .timeline-content {
+        margin-right: calc(50% + 2rem);
+        text-align: right;
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="antialiased">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <header class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold header-title mb-2">
+          🎃 Kindergarten Fall Party Hub 🎃
+        </h1>
+        <p class="text-lg text-gray-600">
+          Let's make this party a spooktacular success for our little ones!
+        </p>
+      </header>
+
+      <main>
+        <section id="event-details" class="card p-8 mb-12 max-w-4xl mx-auto">
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">Party Details</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div class="p-4 bg-orange-50 rounded-lg">
+              <p class="text-sm font-semibold text-orange-700 uppercase">
+                When
+              </p>
+              <p class="text-xl font-bold text-gray-900">Tuesday, Oct 17th</p>
+            </div>
+            <div class="p-4 bg-orange-50 rounded-lg">
+              <p class="text-sm font-semibold text-orange-700 uppercase">
+                Time
+              </p>
+              <p class="text-xl font-bold text-gray-900">2:30 PM - 3:30 PM</p>
+            </div>
+            <div class="p-4 bg-orange-50 rounded-lg">
+              <p class="text-sm font-semibold text-orange-700 uppercase">
+                Attendees
+              </p>
+              <p class="text-xl font-bold text-gray-900">21 Happy Kids!</p>
+            </div>
+          </div>
+          <p class="mt-6 text-gray-700 text-center">
+            I'll have the room decorated for the entire month of October to get
+            everyone in the festive spirit! For the party itself, we'll follow a
+            fun rotation model to keep the kids engaged and moving. Costumes are
+            optional, but please check with the teacher about school guidelines!
+          </p>
+        </section>
+
+        <section id="how-to-help" class="mb-12">
+          <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
+            How You Can Help!
+          </h2>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="card p-6 flex flex-col items-center text-center">
+              <span class="text-5xl mb-4">🎨</span>
+              <h3 class="text-2xl font-bold text-gray-800 mb-2">
+                Plan an Activity
+              </h3>
+              <p class="text-gray-600 mb-4">
+                We need 4 parents to each plan a fun, 10-minute activity or
+                craft for a small group.
+              </p>
+              <div
+                id="activity-slots"
+                class="flex space-x-2 text-3xl text-gray-300 mb-4"
+              >
+                <span>●</span><span>●</span><span>●</span><span>●</span>
+              </div>
+              <p class="mb-4 text-gray-800 font-semibold">
+                <span id="activity-count">0</span> of 4 slots filled
+              </p>
+              <button
+                id="plan-activity-btn"
+                class="btn bg-orange-500 text-white font-bold py-2 px-6 rounded-full w-full"
+              >
+                I Can Plan an Activity!
+              </button>
+            </div>
+
+            <div class="card p-6 flex flex-col items-center text-center">
+              <span class="text-5xl mb-4">✋</span>
+              <h3 class="text-2xl font-bold text-gray-800 mb-2">
+                Volunteer on Party Day
+              </h3>
+              <p class="text-gray-600 mb-4">
+                Join us from 2:30-3:30 PM to help run an activity station and
+                guide the kids.
+              </p>
+              <div
+                id="volunteer-slots"
+                class="flex space-x-2 text-3xl text-gray-300 mb-4"
+              >
+                <span>●</span><span>●</span><span>●</span><span>●</span
+                ><span>●</span>
+              </div>
+              <p class="mb-4 text-gray-800 font-semibold">
+                <span id="volunteer-count">0</span> of 5 slots filled
+              </p>
+              <button
+                id="day-of-volunteer-btn"
+                class="btn bg-teal-500 text-white font-bold py-2 px-6 rounded-full w-full"
+              >
+                I Can Volunteer!
+              </button>
+            </div>
+
+            <div class="card p-6 flex flex-col items-center text-center">
+              <span class="text-5xl mb-4">🎁</span>
+              <h3 class="text-2xl font-bold text-gray-800 mb-2">
+                Donate Small Prizes
+              </h3>
+              <p class="text-gray-600 mb-4">
+                Small prizes from the dollar store (stickers, pencils, etc.)
+                make our games extra fun!
+              </p>
+              <p
+                id="prize-thanks"
+                class="text-green-600 font-bold h-10 mb-4 flex items-center justify-center"
+              ></p>
+              <button
+                id="donate-prize-btn"
+                class="btn bg-purple-500 text-white font-bold py-2 px-6 rounded-full w-full"
+              >
+                I Can Donate Prizes!
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="schedule" class="mb-12">
+          <h2 class="text-3xl font-bold text-center text-gray-800 mb-10">
+            Party Schedule
+          </h2>
+          <div class="relative max-w-2xl mx-auto">
+            <div class="timeline">
+              <div class="timeline-item mb-8 flex justify-end">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content card p-6">
+                  <p class="font-bold text-lg text-orange-600">
+                    2:30 - 3:10 PM
+                  </p>
+                  <h4 class="text-xl font-semibold text-gray-800">
+                    Activity Rotations
+                  </h4>
+                  <p class="text-gray-600 mt-1">
+                    Kids will rotate in small groups through four fun, 10-minute
+                    activity stations.
+                  </p>
+                </div>
+              </div>
+              <div class="timeline-item flex justify-start">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content card p-6">
+                  <p class="font-bold text-lg text-teal-600">3:10 - 3:30 PM</p>
+                  <h4 class="text-xl font-semibold text-gray-800">
+                    Whole Group Game
+                  </h4>
+                  <p class="text-gray-600 mt-1">
+                    We'll all come together for a big game like Fall Bingo and
+                    hand out prizes!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="text-center pt-8 border-t border-gray-200">
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">Ready to help?</h3>
+        <p class="text-gray-700 max-w-2xl mx-auto">
+          If you are able to help with any of the above, please reply to the
+          original email by the end of this week, **October 4th**, so we can
+          coordinate our plan. Thank you so much for helping create a memorable
+          party for our little ones!
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const state = {
+          activityPlanners: {
+            count: 0,
+            limit: 4,
+            button: document.getElementById("plan-activity-btn"),
+            counter: document.getElementById("activity-count"),
+            slots: document.getElementById("activity-slots").children,
+          },
+          dayOfVolunteers: {
+            count: 0,
+            limit: 5,
+            button: document.getElementById("day-of-volunteer-btn"),
+            counter: document.getElementById("volunteer-count"),
+            slots: document.getElementById("volunteer-slots").children,
+          },
+          prizeDonors: {
+            button: document.getElementById("donate-prize-btn"),
+            message: document.getElementById("prize-thanks"),
+          },
+        };
+
+        function updateSlots(slotType) {
+          const { count, slots } = state[slotType];
+          const activeColor =
+            slotType === "activityPlanners"
+              ? "text-orange-400"
+              : "text-teal-400";
+
+          for (let i = 0; i < slots.length; i++) {
+            slots[i].classList.remove(activeColor, "text-gray-300");
+            if (i < count) {
+              slots[i].classList.add(activeColor);
+            } else {
+              slots[i].classList.add("text-gray-300");
+            }
+          }
+        }
+
+        function handleSignUp(slotType) {
+          const item = state[slotType];
+          if (item.count < item.limit) {
+            item.count++;
+            item.counter.textContent = item.count;
+            updateSlots(slotType);
+          }
+
+          if (item.count >= item.limit) {
+            item.button.disabled = true;
+            item.button.textContent = "All Slots Filled!";
+            item.button.classList.add("bg-gray-400", "cursor-not-allowed");
+            item.button.classList.remove("bg-orange-500", "bg-teal-500");
+          }
+        }
+
+        state.activityPlanners.button.addEventListener("click", () =>
+          handleSignUp("activityPlanners")
+        );
+        state.dayOfVolunteers.button.addEventListener("click", () =>
+          handleSignUp("dayOfVolunteers")
+        );
+
+        state.prizeDonors.button.addEventListener("click", () => {
+          state.prizeDonors.message.textContent = "Thank you so much!";
+          state.prizeDonors.button.disabled = true;
+          state.prizeDonors.button.classList.add(
+            "bg-gray-400",
+            "cursor-not-allowed"
+          );
+          state.prizeDonors.button.classList.remove("bg-purple-500");
+        });
+
+        updateSlots("activityPlanners");
+        updateSlots("dayOfVolunteers");
+      });
+    </script>
+  </body>
+</html>
